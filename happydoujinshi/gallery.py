@@ -1,3 +1,7 @@
-import plugins.language_CN
-import plugins.parser_nhentai
+from PyQt5.QtGui import *
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
+
+class MangaView():
+    ''' 本子展示区 '''
 
