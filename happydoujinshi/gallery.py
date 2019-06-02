@@ -1,6 +1,6 @@
 from PyQt5.QtGui import QPainter, QColor 
-from PyQt5.QtCore import Qt, QDir, QModelIndex, QAbstractTableModel, QPointF, QPoint, QSize
-from PyQt5.QtWidgets import (QTableView, QFileSystemModel, QStyledItemDelegate)
+from PyQt5.QtCore import Qt, QDir, QModelIndex, QAbstractTableModel, QPointF, QPoint, QSize, QRectF
+from PyQt5.QtWidgets import (QTableView, QListView, QFileSystemModel, QStyledItemDelegate)
 
 from .res import *
 
@@ -8,23 +8,27 @@ import logging
 
 log = logging.getLogger(__name__)
 
+class Manga:
+    def __init__(self, name = None, picobj = None):
+        self.name = name
+        self.picobj = picobj
+
 # 单元格子paint图片
 class GridDelegate(QStyledItemDelegate):
     ''' table grid delegate '''
     def __init__(self, app, parent):
         super().__init__(parent)
 
-    # def paint(self, painter, option, index):
-    #     assert isinstance(painter, QPainter)
-    #     rec = option.rect.getRect()
-    #     x = rec[0]
-    #     y = rec[1]
-    #     w = rec[2]
-    #     h = rec[3]
-    #     gallery = index.data(Qt.UserRole)
-    #     #painter.setPen(QColor(164,164,164,200))
-    #     #painter.drawLine(QPointF(x-10,y-10),QPointF(x+w,y+h))
-    #     painter.drawImage((x+w//2),(y+h//2),gallery)
+    def paint(self, painter, option, index):
+        rec = option.rect.getRect()
+        x = rec[0]
+        y = rec[1]
+        w = rec[2]
+        h = rec[3]
+        gallery = index.data(Qt.UserRole)
+        #painter.setPen(QColor(164,164,164,200))
+        painter.drawImage(QRectF(x,y,w,h),gallery.picobj)
+        #painter.drawLine(QPointF(x,y),QPointF(x+w,y+h))
 
     def sizeHint(self, option, index):
         # 重设大小
@@ -37,14 +41,7 @@ class MangaModel(QAbstractTableModel):
     '''
     def __init__(self, data, parent=None):
         super().__init__(parent)
-
         self._data = []
-        for row in range(1,5):
-            for col in range(1,4):
-                if row % 2:
-                    self._data.append(c_png)
-                else:
-                    self._data.append(bw_png)
 
     def data(self, index, role=Qt.DisplayRole):
         # 根据index与role输入获取数据
@@ -61,7 +58,10 @@ class MangaModel(QAbstractTableModel):
 
     def columnCount(self, parent=QModelIndex()):
         # 有多少列
-        return 6
+        return 1
+
+    def appendRow(self, item):
+        self._data.append(item)
 
     # def headerData(self, section, orientation, role=Qt.DisplayRole):
     #     # 数据表头
@@ -69,21 +69,27 @@ class MangaModel(QAbstractTableModel):
 
 
 # 表view
-class MangaTableView(QTableView):
+class MangaTableView(QListView):
     ''' view '''
     def __init__(self, parent=None):
         super().__init__(parent)
         #self.setShowGrid(False)
+        self.setViewMode(self.IconMode)
+        self.setResizeMode(self.Adjust)
 
-    def initUI(self):
-        pass
+        self.setWrapping(True)
+        self.setSpacing(10)
+        
+        self.setIconSize(QSize(W_png,H_png))
+        self.setFlow(self.LeftToRight)
+
+        #self.update()
+
 
 class MangaView:
     def __init__(self, parent):
         self.view = MangaTableView(parent)
         self.model = MangaModel([])
-
-
         self.delegate = GridDelegate(parent, self.view)
 
         parent.layout.addWidget(self.view)
@@ -96,7 +102,17 @@ class MangaView:
         self.view.setRootIndex(self.model.index(QDir.currentPath()))
         '''
         self.view.setModel(self.model)
+        self.view.setSelectionRectVisible(True)
         self.view.setItemDelegate(self.delegate)
+
+        self.getimamge()
+
+    def getimamge(self):
+        for i in range(22):
+            if i %2 :
+                self.model.appendRow(Manga('c_png',c_png))
+            else:
+                self.model.appendRow(Manga('bw_png',bw_png))
 
     def show(self):
         log.debug('show()')
