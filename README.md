@@ -29,11 +29,18 @@ M=C=V M和C无关，不需要注册任何消息
 
 http://www.omegaxyz.com/2019/03/03/pyqt5_mvc/
 
+# Appearance 布局
+layout.setContentsMargins(0,0,0,0)
+table.setShowGrid(False)
+
 ## 思考
-QTableView 显示表
-QAbstractTableModel 模型类
-
-
+使用QTableView显示表
+使用QAbstractTableModel模型类(测试时使用测试数据)
+每个表格画上图片，需要QStyledItemDelegate
+需要实现paint()和sizeHint()函数
+表格数据改变，需要告诉model，实现setModelData()函数
+表格数据改变，显示也要跟着改变，实现setEditorData()函数
+最后数据改变，布局单元格也要改变，实现updataEditorGeometry()函数
 
 # pyqt5 debug
 def dbg():
