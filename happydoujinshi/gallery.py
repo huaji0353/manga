@@ -83,24 +83,24 @@ class MangaTableView(QListView):
         self.setIconSize(QSize(W_png,H_png))
         self.setFlow(self.LeftToRight)
 
+        def print_clicked(a):
+            print(f'{a.data(Qt.UserRole + 1).name}')
+
+        self.clicked.connect(print_clicked)
         #self.update()
 
+    
 
 class MangaView:
     def __init__(self, parent):
+        self.model = MangaModel([])        
         self.view = MangaTableView(parent)
-        self.model = MangaModel([])
         self.delegate = GridDelegate(parent, self.view)
 
         parent.layout.addWidget(self.view)
-        '''
-        log.debug('本子展示区初始化，文件系统测试')
-        self.model = QFileSystemModel()
-        self.model.setRootPath(QDir.currentPath())
 
-        self.view.setModel(self.model)
-        self.view.setRootIndex(self.model.index(QDir.currentPath()))
-        '''
+        log.debug('本子展示区被父窗口layout')
+
         self.view.setModel(self.model)
         self.view.setSelectionRectVisible(True)
         self.view.setItemDelegate(self.delegate)
