@@ -3,6 +3,16 @@ read &amp; mgr your manga in online/download/offline , it was implement by pyqt5
 
 启发与大量代码来自happypanda, thanks
 
+# hahaha.py
+本项目已停止开发，效果如（效果图.jpg）所示
+
+弃坑最后演示，丑丑丑
+
+本人太菜（实际上是想太多，根本做不到。。。）
+
+纠结纠结太难受，还不如html渲染，。。。。。。。。。。。
+
+
 # 开发
 UI（带日志跟踪）：展示本子的list和图片画廊table控件，带菜单的主窗口
 
@@ -70,11 +80,6 @@ def dbg():
     pyqtRestoreInputHook()
 
 .children
-
-#### hahaha.py
-弃坑最后演示，丑丑丑，由于本人太菜（实际上是想太多，根本做不到。。。）所以停止开发
-
-还不如html渲染，。。。。。。。。。。。
 
 ## 相关
 happypanda
