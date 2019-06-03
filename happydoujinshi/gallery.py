@@ -39,8 +39,9 @@ class MangaModel(QAbstractTableModel):
     ''' model table 
         cover
     '''
-    def __init__(self, data, parent=None):
+    def __init__(self, view, parent=None):
         super().__init__(parent)
+        self.view = view
         self._data = []
 
     def data(self, index, role=Qt.DisplayRole):
@@ -62,6 +63,8 @@ class MangaModel(QAbstractTableModel):
 
     def appendRow(self, item):
         self._data.append(item)
+        self.view.update()
+        
 
     # def headerData(self, section, orientation, role=Qt.DisplayRole):
     #     # 数据表头
@@ -92,9 +95,9 @@ class MangaTableView(QListView):
     
 
 class MangaView:
-    def __init__(self, parent):
-        self.model = MangaModel([])        
+    def __init__(self, parent):        
         self.view = MangaTableView(parent)
+        self.model = MangaModel(self.view)
         self.delegate = GridDelegate(parent, self.view)
 
         parent.layout.addWidget(self.view)
